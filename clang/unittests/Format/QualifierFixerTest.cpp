@@ -73,8 +73,6 @@ TEST_F(QualifierFixerTest, RotateTokens) {
             tok::kw_short);
   EXPECT_EQ(LeftRightQualifierAlignmentFixer::getTokenFromQualifier("decltype"),
             tok::kw_decltype);
-  EXPECT_EQ(LeftRightQualifierAlignmentFixer::getTokenFromQualifier("auto"),
-            tok::kw_auto);
   EXPECT_EQ(LeftRightQualifierAlignmentFixer::getTokenFromQualifier("explicit"),
             tok::kw_explicit);
 }
@@ -1096,19 +1094,18 @@ TEST_F(QualifierFixerTest, IsQualifierType) {
   ConfiguredTokens.push_back(tok::kw_long);
   ConfiguredTokens.push_back(tok::kw_short);
   ConfiguredTokens.push_back(tok::kw_decltype);
-  ConfiguredTokens.push_back(tok::kw_auto);
   ConfiguredTokens.push_back(tok::kw_explicit);
 
   TestLexer lexer{Allocator, Buffers};
   const auto LangOpts = getFormattingLangOpts();
 
   auto Tokens = lexer.lex(
-      "const static inline auto restrict int double long constexpr friend "
+      "const static inline restrict int double long constexpr friend "
       "typedef consteval constinit thread_local extern mutable signed unsigned short decltype explicit");
   ASSERT_EQ(Tokens.size(), 20u) << Tokens;
 
   // Test that all tokens are recognized
-  for (size_t i = 0; i < 19; ++i) {
+  for (size_t i = 0; i < 20; ++i) {
     EXPECT_TRUE(isConfiguredQualifierOrType(Tokens[i], ConfiguredTokens, LangOpts)) 
         << "Token " << i << " should be recognized";
     EXPECT_TRUE(isQualifierOrType(Tokens[i], LangOpts)) 
@@ -1446,10 +1443,6 @@ TEST_F(QualifierFixerTest, NewQualifierSupport) {
   Style.QualifierOrder = {"decltype", "type"};
   // Note: decltype is typically used with parentheses and doesn't usually get reordered
   // This test mainly verifies it's recognized as a qualifier
-  
-  // Test auto qualifier
-  Style.QualifierOrder = {"const", "auto"};
-  verifyFormat("const auto x = 5;", "auto const x = 5;", Style);
   
   // Test explicit qualifier 
   Style.QualifierOrder = {"explicit", "type"};

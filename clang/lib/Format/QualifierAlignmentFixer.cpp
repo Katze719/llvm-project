@@ -180,7 +180,6 @@ static bool isQualifier(const FormatToken *const Tok) {
   case tok::kw_long:
   case tok::kw_short:
   case tok::kw_decltype:
-  case tok::kw_auto:
   case tok::kw_explicit:
     return true;
   default:
@@ -553,7 +552,6 @@ tok::TokenKind LeftRightQualifierAlignmentFixer::getTokenFromQualifier(
       .Case("long", tok::kw_long)
       .Case("short", tok::kw_short)
       .Case("decltype", tok::kw_decltype)
-      .Case("auto", tok::kw_auto)
       .Case("explicit", tok::kw_explicit)
       .Default(tok::identifier);
 }
