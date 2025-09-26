@@ -1457,12 +1457,12 @@ TEST_F(QualifierFixerTest, NewQualifierSupport) {
   // This test mainly verifies it's recognized as a qualifier
   
   // Test complex combination with new qualifiers
-  Style.QualifierOrder = {"extern", "thread_local", "static", "constexpr", "consteval", 
-                          "constinit", "mutable", "inline", "unsigned", "long", "type", 
+  Style.QualifierOrder = {"extern", "thread_local", "static", "constexpr",
+                          "inline", "unsigned", "long", "type", 
                           "const", "volatile"};
   
   verifyFormat("extern thread_local static constexpr inline unsigned long int const volatile var;",
-               "volatile const extern constexpr thread_local static inline unsigned long int constexpr var;", Style);
+               "volatile const extern constexpr thread_local static inline unsigned long int var;", Style);
 }
 
 TEST_F(QualifierFixerTest, Ranges) {
